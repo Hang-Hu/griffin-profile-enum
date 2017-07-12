@@ -1,0 +1,65 @@
+----------------------------------------------------------------
+Wed Jul 12 14:35:23 CST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-015d-3582-604e-00000a8768d0 
+on database directory /private/var/folders/wk/3c08j2zx3n55sd5tnr39sgk0395lh3/T/spark-49c3e567-04f4-4831-8e2e-7955f515653b/metastore with class loader sun.misc.Launcher$AppClassLoader@76ccd017 
+Loaded from file:/Users/xiangrchen/.m2/raptor2/org/apache/derby/derby/10.10.2.0/derby-10.10.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_121-b13
+user.dir=/Users/xiangrchen/Desktop/cxr_files/temp/griffin-profile-enum
+os.name=Mac OS X
+os.arch=x86_64
+os.version=10.12.5
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Wed Jul 12 14:35:28 CST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance 54d50398-015d-3582-604e-00000a8768d0 
+on database directory /private/var/folders/wk/3c08j2zx3n55sd5tnr39sgk0395lh3/T/spark-bd792213-9832-48a9-a702-3ba9655f0ed6/metastore with class loader sun.misc.Launcher$AppClassLoader@76ccd017 
+Loaded from file:/Users/xiangrchen/.m2/raptor2/org/apache/derby/derby/10.10.2.0/derby-10.10.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_121-b13
+user.dir=/Users/xiangrchen/Desktop/cxr_files/temp/griffin-profile-enum
+os.name=Mac OS X
+os.arch=x86_64
+os.version=10.12.5
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Wed Jul 12 14:35:30 CST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance 3e81c6d6-015d-3582-604e-00000a8768d0 
+on database directory /private/var/folders/wk/3c08j2zx3n55sd5tnr39sgk0395lh3/T/spark-d6733a43-59b6-4244-8ce8-79d1570483cc/metastore with class loader sun.misc.Launcher$AppClassLoader@76ccd017 
+Loaded from file:/Users/xiangrchen/.m2/raptor2/org/apache/derby/derby/10.10.2.0/derby-10.10.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_121-b13
+user.dir=/Users/xiangrchen/Desktop/cxr_files/temp/griffin-profile-enum
+os.name=Mac OS X
+os.arch=x86_64
+os.version=10.12.5
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Wed Jul 12 14:35:32 CST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance 08ef8a14-015d-3582-604e-00000a8768d0 
+on database directory /private/var/folders/wk/3c08j2zx3n55sd5tnr39sgk0395lh3/T/spark-4b6e2a00-4ce8-4066-b5cd-543cdcc93842/metastore with class loader sun.misc.Launcher$AppClassLoader@76ccd017 
+Loaded from file:/Users/xiangrchen/.m2/raptor2/org/apache/derby/derby/10.10.2.0/derby-10.10.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_121-b13
+user.dir=/Users/xiangrchen/Desktop/cxr_files/temp/griffin-profile-enum
+os.name=Mac OS X
+os.arch=x86_64
+os.version=10.12.5
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Wed Jul 12 14:35:33 CST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance 341e4d52-015d-3582-604e-00000a8768d0 
+on database directory /private/var/folders/wk/3c08j2zx3n55sd5tnr39sgk0395lh3/T/spark-3528c277-84c4-4f25-8499-eb5db961a2b1/metastore with class loader sun.misc.Launcher$AppClassLoader@76ccd017 
+Loaded from file:/Users/xiangrchen/.m2/raptor2/org/apache/derby/derby/10.10.2.0/derby-10.10.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_121-b13
+user.dir=/Users/xiangrchen/Desktop/cxr_files/temp/griffin-profile-enum
+os.name=Mac OS X
+os.arch=x86_64
+os.version=10.12.5
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
