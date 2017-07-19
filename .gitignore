@@ -3,3 +3,5 @@ out/*
 ttt/*
 .idea/*
 derby.log
+*.class
+*.iml
