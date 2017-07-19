@@ -17,7 +17,7 @@ public class LoggerPersist implements Persist {
         LOGGER.info("===========================================================");
         LOGGER.info(enumProfile.getEnumValue().getName()+" enum profile result:");
         if (enumProfileRes==null){
-            LOGGER.info("source table is empty");
+            LOGGER.error("source table is empty");
         }else {
             LOGGER.info("" + enumProfileRes);
         }

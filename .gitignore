@@ -1,5 +1,5 @@
 target/*
-!target/griffin-profile-1.0-SNAPSHOT-jar-with-dependencies.jar
 out/*
 ttt/*
 .idea/*
+derby.log

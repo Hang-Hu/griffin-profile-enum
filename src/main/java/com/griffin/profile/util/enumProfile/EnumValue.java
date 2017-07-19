@@ -1,13 +1,13 @@
 package com.griffin.profile.util.enumProfile;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Created by xiangrchen on 7/3/17.
  */
 public class EnumValue {
     String name;
-    List<String> valueList;
+    Set<String> valueSet;
 
     public String getName() {
         return name;
@@ -17,19 +17,19 @@ public class EnumValue {
         this.name = name;
     }
 
-    public List<String> getValueList() {
-        return valueList;
+    public Set<String> getValueSet() {
+        return valueSet;
     }
 
-    public void setValueList(List<String> valueList) {
-        this.valueList = valueList;
+    public void setValueSet(Set<String> valueSet) {
+        this.valueSet = valueSet;
     }
 
     public EnumValue() {
     }
 
-    public EnumValue(String name, List<String> valueList) {
+    public EnumValue(String name, Set<String> valueSet) {
         this.name = name;
-        this.valueList = valueList;
+        this.valueSet = valueSet;
     }
 }

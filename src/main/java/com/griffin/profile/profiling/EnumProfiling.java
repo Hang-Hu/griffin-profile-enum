@@ -23,13 +23,17 @@ import java.util.*;
 public class EnumProfiling implements Profiling{
     private static final Logger LOGGER = LoggerFactory.getLogger(EnumProfiling.class);
 
-    String profileEnumPrefix=null;
-    EnumProfile enumProfile=null;
-    List<String> profileFieldValueList=new ArrayList<String>();
+    String profileEnumPrefix;
+    EnumProfile enumProfile;
+    Set<String> profileFieldValueSet;
     MultiPersist multiPersist;
+
+    Map<String,String> singleCheckResultName;
 
     public EnumProfiling(String[] argsHome){
         multiPersist =new MultiPersist();
+        profileFieldValueSet=new HashSet<String>();
+        singleCheckResultName=new HashMap<String,String>();
 
         String enumProfilePath=argsHome[0];
         String fsTypes=null;
@@ -38,9 +42,12 @@ public class EnumProfiling implements Profiling{
 
         String enumProfileStr= FileOperate.readFile(enumProfilePath);
         enumProfile= JsonConvert.toEntity(enumProfileStr,EnumProfile.class);
-
         profileEnumPrefix=enumProfile.getElasticSearch().getHitNamePrefix();
-        profileFieldValueList=enumProfile.getEnumValue().getValueList();
+        profileFieldValueSet=enumProfile.getEnumValue().getValueSet();
+        if (profileFieldValueSet==null || profileFieldValueSet.size()==0){
+            LOGGER.error("enumValue valueSet have nothing, please check your enumValue valueSet in enumProfile.json!");
+            return;
+        }
         EnvFile envFile=enumProfile.getEnvFile();
         if (envFile.getType()!=null){
             envFsType=envFile.getType();
@@ -52,81 +59,79 @@ public class EnumProfiling implements Profiling{
         }
         fsTypes=envFsType+",raw";       //default confFsType is "raw"
         //launching profile Application.main(args)
-        for (String testItem:profileFieldValueList){
+        for (String enumItem:profileFieldValueSet){
+            if (enumItem==null){
+//                System.out.println(enumItem);
+            }
             Config config=new Config();
-            setConfig(config,testItem,enumProfile.getSource());
+            setConfig(config,enumItem,enumProfile.getSource());
+            singleCheckResultName.put(enumItem,config.getName());
             String configJson=JsonConvert.toJson(config);
-
             String[] args={envFsPathORContent,configJson,fsTypes};
             Application.main(args);
         }
     }
 
-    public void setConfig(Config config,String testItem,Source source){
-        config.setName(profileEnumPrefix+testItem);
+    public void setConfig(Config config,String enumItem,Source source){
+        config.setName(profileEnumPrefix+"_"+System.currentTimeMillis()+"_"+enumItem);
         config.setType("profile");
         config.setSource(source);
 
         EvaluateRule evaluateRule=new EvaluateRule(1);
-        evaluateRule.setRules("$source."+enumProfile.getEnumValue().getName()+" == '"+testItem+"'");
+        if (enumItem==null){
+            evaluateRule.setRules("$source."+enumProfile.getEnumValue().getName()+" == null");
+        }else {
+            evaluateRule.setRules("$source."+enumProfile.getEnumValue().getName()+" == '"+enumItem+"'");
+        }
         config.setEvaluateRule(evaluateRule);
     }
 
     @Override
     public void executeProfiling(){
         //get profiling/enum response from es.
-        try {
-            String requestJson="{\n" +
-                    "   \"query\" : {\n" +
-                    "       \"match_phrase_prefix\" : {\n" +
-                    "           \"name\":\""+profileEnumPrefix+"\"\n"+
-                    "       }\n"+
-                    "   },  \n"+
-                    "   \"sort\" : [{\"tmst\": {\"order\": \"desc\"}}] \n"+
-                    "}";
-
-            String url="http://"+enumProfile.getElasticSearch().getIp()+":"+enumProfile.getElasticSearch().getPort() +enumProfile.getElasticSearch().getEndPoint();
-            RestTemplate rest=new RestTemplate();
-            String postResultStr=rest.postForObject(url,requestJson,String.class);
-            genProfileResult(postResultStr);
-        }catch (Exception e){
-            LOGGER.warn(""+e);
-        }
-    }
-
-    public void genProfileResult(String resultStr){
         Map<String,Double> enumProfileRes=new HashMap<String,Double>();
+        try {
+            long enumAllFeildMatched=0;
+            long total=0;
+            RestTemplate restTemplate=new RestTemplate();
+            for (String enumItem:singleCheckResultName.keySet()){
+                String requestJson1="{\n" +
+                        "   \"query\" : {\n" +
+                        "       \"match\" : {\n" +
+                        "           \"name\":\""+singleCheckResultName.get(enumItem)+"\"\n"+
+                        "       }\n"+
+                        "   },  \n"+
+                        "   \"sort\" : [{\"tmst\": {\"order\": \"desc\"}}] \n"+
+                        "}";
+                String url="http://"+enumProfile.getElasticSearch().getIp()+":"+enumProfile.getElasticSearch().getPort() +enumProfile.getElasticSearch().getEndPoint();
+                String postResultStr=restTemplate.postForObject(url,requestJson1,String.class);
+                List<_Source> _sourceList= _SourceReader.read(postResultStr);
+                int count=5;
+                while ((_sourceList==null || _sourceList.size()==0) && (count--)>0){
+                    postResultStr=restTemplate.postForObject(url,requestJson1,String.class);
+                    _sourceList= _SourceReader.read(postResultStr);
+                    Thread.currentThread().sleep(1000);
+                }
+                if (_sourceList==null){
+                    throw new Exception("can not get single value result of "+enumItem);
+                }
 
-        List<_Source> _sourceList= _SourceReader.read(resultStr);
-        long enumAllFeildMatched=0;
-        long total=0;
-        for (String testItem:profileFieldValueList){
-            List<_Source> testItem_Sourcelist=new ArrayList<_Source>();
-            for (_Source _source:_sourceList){
-                if (_source.getName().startsWith(profileEnumPrefix+testItem)){
-                    testItem_Sourcelist.add(_source);
+                if (enumItem==null){
+                    enumItem=enumItem+"(null object)";
                 }
+                enumProfileRes.put(enumItem,(double)_sourceList.get(0).getMatched()/(double)_sourceList.get(0).getTotal());
+                enumAllFeildMatched=enumAllFeildMatched+_sourceList.get(0).getMatched();
+                total=_sourceList.get(0).getTotal();
             }
-            if(testItem_Sourcelist.size()>0){
-//                Collections.sort(testItem_Sourcelist, new Comparator<_Source>() {
-//                    @Override
-//                    public int compare(_Source o1, _Source o2) {
-//                        return (o1.getTmst()-o2.getTmst())>=0?-1:1;
-//                    }
-//                });
-                Collections.sort(testItem_Sourcelist, (o1,o2)->(o1.getTmst()-o2.getTmst())>=0?-1:1);
-                if (testItem_Sourcelist.get(0).getTotal()!=0){
-                    enumProfileRes.put(testItem,(double)testItem_Sourcelist.get(0).getMatched()/(double)testItem_Sourcelist.get(0).getTotal());
-                    enumAllFeildMatched=enumAllFeildMatched+testItem_Sourcelist.get(0).getMatched();
-                    total=testItem_Sourcelist.get(0).getTotal();
-                }
+            if (total==0){
+                enumProfileRes=null;
+            }else {
+                enumProfileRes.put("OTHER",(double)(total-enumAllFeildMatched)/(double)total);
             }
+        }catch (Exception e){
+            LOGGER.error(""+e.getMessage());
         }
-        if (total==0){
-            enumProfileRes=null;
-        }else {
-            enumProfileRes.put("OTHER",(double)(total-enumAllFeildMatched)/(double)total);
-        }
+        //out
         multiPersist.out(enumProfile,enumProfileRes);
     }
 }

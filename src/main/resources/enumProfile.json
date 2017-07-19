@@ -9,18 +9,17 @@
 
   "enumValue":{
     "name":"nick_name",
-    "valueList":[
+    "valueSet":[
       "c101",
       "aaa",
       "aa1",
-      "c103",
-      "c104"
+      null
     ]
   },
 
   "elasticSearch":{
     "ip":"10.149.247.156",
-    "port":39200,
+    "port":49200,
     "endPoint":"/griffin/accuracy/_search?pretty&filter_path=hits.hits._source&size=100",
     "hitNamePrefix":"profileEnum"
   },
