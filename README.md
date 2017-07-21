@@ -3,6 +3,6 @@
 ## spec
 
 ### Main business process
-![Business_Process_image](img/Business_Process.png)
+![Business_Process_image](img/enumvalue-check-spec.png)
 
 ## demo tips
