@@ -39,7 +39,6 @@ public class EnumProfiling implements Profiling{
         String fsTypes=null;
         String envFsType=null;
         String envFsPathORContent=null;
-
         String enumProfileStr= FileOperate.readFile(enumProfilePath);
         enumProfile= JsonConvert.toEntity(enumProfileStr,EnumProfile.class);
         profileEnumPrefix=enumProfile.getElasticSearch().getHitNamePrefix();
@@ -57,14 +56,13 @@ public class EnumProfiling implements Profiling{
                 envFsPathORContent=envFile.getConfig().get("file.content");
             }
         }
-        fsTypes=envFsType+",raw";       //default confFsType is "raw"
+        //default confFsType is "raw"
+        fsTypes=envFsType+",raw";
         //launching profile Application.main(args)
+        profileFieldValueSet.add("OTHER");
         for (String enumItem:profileFieldValueSet){
-            if (enumItem==null){
-//                System.out.println(enumItem);
-            }
             Config config=new Config();
-            setConfig(config,enumItem,enumProfile.getSource());
+            setConfig(config,enumItem,enumProfile.getSource(),profileFieldValueSet);
             singleCheckResultName.put(enumItem,config.getName());
             String configJson=JsonConvert.toJson(config);
             String[] args={envFsPathORContent,configJson,fsTypes};
@@ -72,13 +70,28 @@ public class EnumProfiling implements Profiling{
         }
     }
 
-    public void setConfig(Config config,String enumItem,Source source){
+    public void setConfig(Config config,String enumItem,Source source,Set<String> profileFieldValueSet){
         config.setName(profileEnumPrefix+"_"+System.currentTimeMillis()+"_"+enumItem);
         config.setType("profile");
         config.setSource(source);
 
         EvaluateRule evaluateRule=new EvaluateRule(1);
-        if (enumItem==null){
+        if (enumItem=="OTHER"){
+            StringBuilder sb=new StringBuilder();
+            for (String item:profileFieldValueSet){
+                if (item!=null && item.equals("OTHER")){
+                    continue;
+                }else if(item==null){
+                    sb.append(item);
+                    sb.append(",");
+                }else {
+                    sb.append("\'"+item+"\'");
+                    sb.append(",");
+                }
+            }
+            LOGGER.info("$source."+enumProfile.getEnumValue().getName()+" NOT IN ("+sb.substring(0,sb.length()-1)+")");
+            evaluateRule.setRules("$source."+enumProfile.getEnumValue().getName()+" NOT IN ( "+sb.substring(0,sb.length()-1)+" )");
+        } else if (enumItem==null){
             evaluateRule.setRules("$source."+enumProfile.getEnumValue().getName()+" == null");
         }else {
             evaluateRule.setRules("$source."+enumProfile.getEnumValue().getName()+" == '"+enumItem+"'");
@@ -91,8 +104,6 @@ public class EnumProfiling implements Profiling{
         //get profiling/enum response from es.
         Map<String,Double> enumProfileRes=new HashMap<String,Double>();
         try {
-            long enumAllFeildMatched=0;
-            long total=0;
             RestTemplate restTemplate=new RestTemplate();
             for (String enumItem:singleCheckResultName.keySet()){
                 String requestJson1="{\n" +
@@ -112,21 +123,15 @@ public class EnumProfiling implements Profiling{
                     _sourceList= _SourceReader.read(postResultStr);
                     Thread.currentThread().sleep(1000);
                 }
-                if (_sourceList==null){
-                    throw new Exception("can not get single value result of "+enumItem);
-                }
-
                 if (enumItem==null){
+                    //in order to distinguish null from 'null'
                     enumItem=enumItem+"(null object)";
                 }
-                enumProfileRes.put(enumItem,(double)_sourceList.get(0).getMatched()/(double)_sourceList.get(0).getTotal());
-                enumAllFeildMatched=enumAllFeildMatched+_sourceList.get(0).getMatched();
-                total=_sourceList.get(0).getTotal();
-            }
-            if (total==0){
-                enumProfileRes=null;
-            }else {
-                enumProfileRes.put("OTHER",(double)(total-enumAllFeildMatched)/(double)total);
+                if (_sourceList==null){
+                    LOGGER.error("can not get single value result of "+enumItem);
+                }else {
+                    enumProfileRes.put(enumItem, (double) _sourceList.get(0).getMatched() / (double) _sourceList.get(0).getTotal());
+                }
             }
         }catch (Exception e){
             LOGGER.error(""+e.getMessage());
