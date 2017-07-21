@@ -1,2 +1,2 @@
 # griffin-profile-enum
-##spec
+## spec
