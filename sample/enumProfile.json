@@ -1,0 +1,50 @@
+{
+  "source": {
+    "type": "avro",
+    "version": "1.7",
+    "config": {
+      "file.name": "hdfs:///griffin/data/enum-profiling-sample/test_src.avro"
+    }
+  },
+
+  "enumValue":{
+    "name":"race",
+    "valueSet":[
+      "White",
+      "Black",
+      "Asian-Pac-Islander",
+      "Amer-Indian-Eskimo",
+      "Other"
+    ]
+  },
+
+  "elasticSearch":{
+    "ip":"10.149.247.156",
+    "port":49200,
+    "endPoint":"/griffin/accuracy/_search?pretty&filter_path=hits.hits._source&size=100",
+    "hitNamePrefix":"profileEnum"
+  },
+
+  "envFile":{
+    "type":"local",
+    "config":{
+      "file.name":"env.json",
+      "file.content":""
+    }
+  },
+
+  "persist":[
+    {
+      "type":"log",
+      "config":{
+
+      }
+    },
+    {
+      "type":"hdfs",
+      "config":{
+        "path": "hdfs:///griffin/data/enum-profiling-sample/result/"
+      }
+    }
+  ]
+}
