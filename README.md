@@ -122,11 +122,4 @@ enum value check in griffin means checking all value of the enum from avro file 
 
 ### Run
 
-```
-spark-submit --class com.griffin.profile.ProfileApplication --master yarn-client \
-                    --num-executors 1 \
-                    --conf "spark.yarn.dist.files=$SPARK_HOME/conf/hive-site.xml" \
-                    griffin-profile-1.0-SNAPSHOT-jar-with-dependencies.jar \
-                    /root/ttt/enumProfile.json
-```
 
