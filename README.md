@@ -7,7 +7,7 @@ Compute the ocurrence possibility of each enum in a column of a data set.
 ## Main business process
 ![Business_Process_image](doc/image/enumvalue-check-spec.png)
 
-## Demo
+## Usage
 
 ### Source data
 
