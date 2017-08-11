@@ -1,17 +1,17 @@
-# griffin-profile-enum
-## spec
-## user guide
+# Griffin enum profiling
 
-## spec
-### define
-enum value check in griffin means checking all value of the enum from avro file or hive table and return a calculate result to user.
+## Function
 
-### Main business process
+Compute the ocurrence possibility of each enum in a column of a data set.
+
+## Main business process
 ![Business_Process_image](doc/image/enumvalue-check-spec.png)
 
 ## Demo
 
 ### Source data
+
+Avro is used as source data, containing both schema and data.
 
 [How to generate avro file](How-to-generate-avro-file.md)
 
