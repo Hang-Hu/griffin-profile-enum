@@ -30,7 +30,7 @@ enum value check in griffin means checking all value of the enum from avro file 
 
 `enumValue` is the key and all values of enum to be profiled in `test_src.json`.
 
-`elasticSearch` indicates where to read single matched results persisted by griffin measure. `ip:port+endPoint` makes up the adress of single matched results in elasticsearch.
+`elasticSearch` indicates where to read single matched results persisted by griffin measure. `ip:port+endPoint` makes up the adress of single matched results in elasticsearch. `hitNamePrefix` adds a prefix to `name` of each single matched result in elasticsearch.
 
 `persist` is the way `griffin-profile-enum` uses to store the final results, which is the combination of all single matched results.
 
@@ -40,7 +40,7 @@ enum value check in griffin means checking all value of the enum from avro file 
     "type": <source type, either avro or hive>,
     "version": "1.7",
     "config": {
-      "file.name": <your avro file path, either in local or hdfs | your hive table name>
+      "file.name": <avro file path, either in local or hdfs | hive table name>
     }
   },
 
@@ -63,10 +63,10 @@ enum value check in griffin means checking all value of the enum from avro file 
   },
 
   "envFile":{
-    "type":"local",
+    "type":<local or raw>,
     "config":{
-      "file.name":"src/main/resources/env.json",
-      "file.content":""
+      "file.name":<local path, applicable if type is local>,
+      "file.content":<content of env.json, applicable if type is raw>
     }
   },
 
@@ -79,7 +79,7 @@ enum value check in griffin means checking all value of the enum from avro file 
     {
       "type":"hdfs",
       "config":{
-        "path": "hdfs://localhost:9000/griffin-profile/enum-value-check/"
+        "path": <hdfs path to store the combined result>
       }
     }
   ]
