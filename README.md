@@ -13,11 +13,9 @@ enum value check in griffin means checking all value of the enum from avro file 
 
 ## Demo
 
-### Data source
+### Source data
 
-```
-
-```
+[How to generate avro file](How-to-generate-avro-file.md)
 
 
 ### Configuration files
@@ -120,6 +118,19 @@ enum value check in griffin means checking all value of the enum from avro file 
 }
 ```
 
-### Run
+### Run sample
 
+A sample has been provided to run the enum profiling.
 
+```
+curl -LO https://raw.githubusercontent.com/justACT/griffin-profile-enum/master/script/docker.sh
+chmod +x docker.sh
+nohup ./docker.sh > enum-profiling.log &
+tail -f enum-profiling.log
+```
+
+The result of doing enum profiling on race:
+
+```
+{Amer-Indian-Eskimo=0.009551303706888609, OTHER=0.0, Asian-Pac-Islander=0.03190933939375326, White=0.8542735173981143, Black=0.0959429992936335, Other=0.008322840207610331}
+```
