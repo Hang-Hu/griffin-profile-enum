@@ -24,13 +24,25 @@ enum value check in griffin means checking all value of the enum from avro file 
 
 #### enumProfile.json
 
+`source` is the `source` part of `config.json`. 
+
+`envFile` is the args submitted to griffin on how and where to get `env.json`.
+
+`enumValue`, `elasticSearch`, `persist` is the config file used by `griffin-profile-enum`.
+
+`enumValue` is the key and all values of enum to be profiled in `test_src.json`.
+
+`elasticSearch` indicates where to read single matched results persisted by griffin measure. `ip:port+endPoint` makes up the adress of single matched results in elasticsearch.
+
+`persist` is the way `griffin-profile-enum` uses to store the final results, which is the combination of all single matched results.
+
 ```
 {
   "source": {
-    "type": "avro",
+    "type": <source type, either avro or hive>,
     "version": "1.7",
     "config": {
-      "file.name": "src/main/resources/test_src.avro"
+      "file.name": <your avro file path, either in local or hdfs | your hive table name>
     }
   },
 
@@ -78,20 +90,30 @@ enum value check in griffin means checking all value of the enum from avro file 
 
 #### env.json
 
+`env.json` is to be submitted to griffin measure.
+
 ```
 {
   "persist": [
     {
       "type": "log",
       "config": {
-        "max.log.lines": 20
+        "max.log.lines": <max lines to log>
+      }
+    },
+    {
+      "type": "hdfs",
+      "config": {
+        "path": <persist path in hdfs>,
+        "max.persist.lines": <max lines to persist>,
+        "max.lines.per.file": <max lines per file to persist>
       }
     },
     {
       "type": "http",
       "config": {
-        "method": "post",
-        "api": "http://10.149.247.156:49200/griffin/accuracy"
+        "method": <http method>,
+        "api": <url>
       }
     }
   ]

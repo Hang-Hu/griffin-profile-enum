@@ -5,3 +5,4 @@ ttt/*
 derby.log
 *.class
 *.iml
+.DS_Store
